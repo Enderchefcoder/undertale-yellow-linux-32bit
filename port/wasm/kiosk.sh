@@ -12,11 +12,16 @@
 #
 set -u
 
-URL="${1:-http://127.0.0.1:8080}"
-[ "${1:-}" = "--run" ] && URL=http://127.0.0.1:8080
+URL="http://127.0.0.1:8080"
 MODE=dry
-[ "${1:-}" = "--run" ] && MODE=run
-[ "$MODE" = "dry" ] && URL="http://127.0.0.1:8080"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --url) shift; URL="${1:-}" ;;
+    --run) MODE=run ;;
+    *) echo "unknown: $1"; exit 2 ;;
+  esac
+  shift || true
+done
 
 # --- choose browser -------------------------------------------------------
 BROWSER=""
@@ -52,7 +57,7 @@ if [ "$MODE" = "run" ]; then
   fi
   case "$BROWSER" in
     chromium*|google-chrome)
-      exec "$BROWSER" --kiosk --no-sandbox --disable-infobars --window-size=320,240 "$URL" ;;
+      exec "$BROWSER" --kiosk --no-sandbox --disable-infobars --window-size=320,240 --force-device-scale-factor=1 "$URL" ;;
     firefox*)
       exec "$BROWSER" --kiosk "$URL" ;;
     surf)

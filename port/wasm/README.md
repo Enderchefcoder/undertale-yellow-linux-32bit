@@ -36,9 +36,20 @@ web build. wasm32 is:
 
 1. Get a complete HTML5/wasm build of UTY (community, self-hostable files:
    `index.html` + a `html5game/` or `.wasm` + JS). Put it in a folder.
-2. `sh serve.sh --dir <that folder> --run`  -> serves it at `http://127.0.0.1:8080`
-3. `sh kiosk.sh`                            -> opens it fullscreen in the best browser
+2. `sh serve.sh --dir <that folder> --run`  -> serves it on port 8080 (0.0.0.0)
+3. `sh kiosk.sh --url http://127.0.0.1:8080 --run` -> opens it fullscreen
 4. (optional) fold `serve.sh` + `kiosk.sh` into an autostart so it boots to the game.
+
+For Freebuff preview, configure the durable commands as:
+
+```sh
+freebuff-preview set-install "true"
+freebuff-preview set "sh port/wasm/serve.sh --dir port/wasm/build/undertale-yellow --run" 8080
+freebuff-preview set-build "true"
+```
+
+The launcher now accepts `--url` explicitly and the server binds to `0.0.0.0`,
+which is required for an isolated preview or LAN test.
 
 ## Files
 

@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # serve.sh — serve a local HTML5/wasm UTY folder so a kiosk browser can load it.
-# Binds to 127.0.0.1 by default (self-play). Use --addr 0.0.0.0 to let another
-# machine on the LAN test it first (handy before copying to the console).
+# Binds to 0.0.0.0 by default so Freebuff preview and LAN testing can reach it.
+# Use --addr 127.0.0.1 when you explicitly want local-only serving.
 #
 # Safe by default: reports the command it would run. Pass --run to actually serve.
 # Usage:
@@ -12,7 +12,7 @@ set -u
 
 DIR=game
 PORT=8080
-ADDR=127.0.0.1
+ADDR=0.0.0.0
 MODE=dry
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -40,7 +40,7 @@ echo "== serve (dry run) =="
 echo "dir  : $DIR"
 echo "url  : http://$ADDR:$PORT"
 echo "cmd  : $SERVER"
-echo "test on a desktop browser first:  http://127.0.0.1:$PORT"
+echo "test locally:  http://127.0.0.1:$PORT"
 
 if [ "$MODE" = "run" ]; then
   echo "serving (Ctrl-C to stop)..."
