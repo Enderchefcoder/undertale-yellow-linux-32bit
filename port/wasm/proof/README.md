@@ -1,33 +1,40 @@
-# Proof — headless boot verification
+# Proof — current capture status
 
-These screenshots are checked-in artifacts captured by
-`port/wasm/tools/screenshot.js` from the local self-hosted web build. They are
-linked below so the proof is visible directly from the repository README.
+The previous PNGs are **failure captures**, not successful gameplay proof. They
+show the loader's error screen and must not be read as evidence that UTY boots.
 
-| Loader | After load | After keys |
-|---|---|---|
-| [![loader](00_loader_640.png)](00_loader_640.png) | [![loaded](01_afterload_640.png)](01_afterload_640.png) | [![keys](02_afterkeys_640.png)](02_afterkeys_640.png) |
+## Observed failure
 
-| GameShell viewport | GameShell after key |
-|---|---|
-| [![320x240](03_320x240_fullgame.png)](03_320x240_fullgame.png) | [![320x240 key](04_320x240_afterkey.png)](04_320x240_afterkey.png) |
+The headless capture reached the bundled WebGL runner, then failed with:
 
-## Capture details
-
-- `00_loader_640.png`: 640×480, five seconds after navigation.
-- `01_afterload_640.png`: 640×480, after the 100-second WAD/wasm wait.
-- `02_afterkeys_640.png`: 640×480, after Enter, Space, and Z keypresses.
-- `03_320x240_fullgame.png`: 320×240, matching the GameShell native viewport.
-- `04_320x240_afterkey.png`: 320×240, after another Enter keypress.
-
-Regenerate with:
-
-```sh
-node port/wasm/tools/screenshot.js port/wasm/proof
+```text
+TypeError: Cannot read properties of undefined (reading 'depthRange')
+at runner.js:7725
 ```
 
-The capture harness reports browser console errors, page errors, failed
-requests, and HTTP errors. The checked-in images demonstrate the loader,
-post-load interaction, and native-size scaling. They do not claim that an
-unofficial web build is an official UTY release or that battle-specific zoom
-has been implemented.
+It also requested this invalid path:
+
+```text
+/undefined/pages/home.html
+```
+
+The capture harness now logs full page-error stacks, HTTP failures, and failed
+requests. Run it after installing a real Chromium binary (not the Ubuntu snap
+wrapper):
+
+```sh
+bun add --dev puppeteer
+CHROMIUM_PATH=/path/to/chromium node port/wasm/tools/screenshot.js port/wasm/proof
+```
+
+## Existing artifacts
+
+The PNGs below preserve the failed run for regression comparison:
+
+| Loader failure | Post-load failure | 320×240 failure |
+|---|---|---|
+| [![loader failure](00_loader_640.png)](00_loader_640.png) | [![post-load failure](01_afterload_640.png)](01_afterload_640.png) | [![viewport failure](03_320x240_fullgame.png)](03_320x240_fullgame.png) |
+
+Do not use these images as a gameplay screenshot. A new capture should replace
+them only after the harness exits cleanly and reports no page errors, HTTP 4xx/
+5xx responses, or failed requests.

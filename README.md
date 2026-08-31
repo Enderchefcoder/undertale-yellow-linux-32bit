@@ -124,12 +124,11 @@ GameMaker-compatible ARM runner. You get to the menu, then Clover, then a
 battle, at a playable-enough framerate for a 2D pixel RPG on a 1GHz Cortex-A7.
 That endgame is achievable but genuinely requires closing the GMS2-on-armv7runner gap documented here.
 
-## Screenshot proof
+## Screenshot proof status
 
-The checked-in web-build proof is visible here:
-
-| Loader | Loaded | GameShell size |
-|---|---|---|
-| [![loader](port/wasm/proof/00_loader_640.png)](port/wasm/proof/00_loader_640.png) | [![loaded](port/wasm/proof/01_afterload_640.png)](port/wasm/proof/01_afterload_640.png) | [![320×240](port/wasm/proof/03_320x240_fullgame.png)](port/wasm/proof/03_320x240_fullgame.png) |
-
-Additional keypress captures are documented in [`port/wasm/proof/README.md`](port/wasm/proof/README.md). These artifacts verify the local web build's load lifecycle, keyboard interaction, and 320×240 scaling; they are not proof of a native ARMv7 runner or battle-specific zoom.
+The checked-in PNGs are explicitly marked as **failure captures**. They show the
+current WebGL exception rather than successful gameplay and are retained only as
+regression artifacts. Read the observed stack trace and regeneration procedure
+in [`port/wasm/proof/README.md`](port/wasm/proof/README.md). No successful boot
+or battle screenshot is claimed until a capture exits without page errors,
+failed requests, or HTTP 4xx/5xx responses.
