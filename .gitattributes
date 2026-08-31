@@ -1,0 +1,1 @@
+port/wasm/build/undertale-yellow/game.unx filter=lfs diff=lfs merge=lfs -text
