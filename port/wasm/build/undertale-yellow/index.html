@@ -365,6 +365,7 @@
       // Keep the override explicit and resolve it relative to this page so the
       // build also works when hosted below a nested Freebuff preview path.
       window.gameUnxUrl = "./game.unx";
+      window.gameUrlPrefix = "./";
 
       // Mirror the original loader's fetch/XHR interception so runner.js routes
       // its "game.unx" requests to the local blob URL, just without the merge.
@@ -372,13 +373,14 @@
         const originalFetch = window.fetch;
         window.fetch = function (...args) {
           let [url, options] = args;
-          if (typeof url === "string" && url.includes("game.unx")) url = window.gameUnxUrl;
+          if (typeof url === "string" && (url.includes("game.unx") || url.includes("undefined/pages/"))) url = url.includes("game.unx") ? window.gameUnxUrl : window.gameUrlPrefix + url.replace(/^.*undefined\//, "");
           else if (url instanceof Request && url.url.includes("game.unx")) url = new Request(window.gameUnxUrl, url);
           return originalFetch.call(this, url, options);
         };
         const originalOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function (method, url, ...rest) {
           if (url.indexOf("game.unx") !== -1) url = window.gameUnxUrl;
+          else if (url.indexOf("undefined/pages/") !== -1) url = window.gameUrlPrefix + url.replace(/^.*undefined\//, "");
           return originalOpen.call(this, method, url, ...rest);
         };
       })();
