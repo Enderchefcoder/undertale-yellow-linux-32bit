@@ -122,5 +122,14 @@ sh install-box86.sh --install   # or omit flag for a dry-run summary
 You press a button on the handheld, and UTY's `data.win` boots under a
 GameMaker-compatible ARM runner. You get to the menu, then Clover, then a
 battle, at a playable-enough framerate for a 2D pixel RPG on a 1GHz Cortex-A7.
-That endgame is achievable but genuinely requires closing the GMS2-on-armv7
-runner gap documented here.
+That endgame is achievable but genuinely requires closing the GMS2-on-armv7runner gap documented here.
+
+## Screenshot proof
+
+The checked-in web-build proof is visible here:
+
+| Loader | Loaded | GameShell size |
+|---|---|---|
+| [![loader](port/wasm/proof/00_loader_640.png)](port/wasm/proof/00_loader_640.png) | [![loaded](port/wasm/proof/01_afterload_640.png)](port/wasm/proof/01_afterload_640.png) | [![320×240](port/wasm/proof/03_320x240_fullgame.png)](port/wasm/proof/03_320x240_fullgame.png) |
+
+Additional keypress captures are documented in [`port/wasm/proof/README.md`](port/wasm/proof/README.md). These artifacts verify the local web build's load lifecycle, keyboard interaction, and 320×240 scaling; they are not proof of a native ARMv7 runner or battle-specific zoom.

@@ -1,32 +1,33 @@
-# Proof — headless boot verification (screenshots)
+# Proof — headless boot verification
 
-These PNGs are captured by `port/wasm/tools/screenshot.js` (headless Chromium +
-SwiftShader WebGL) booting the self-hosted wasm build from
-`port/wasm/build/undertale-yellow/`.
+These screenshots are checked-in artifacts captured by
+`port/wasm/tools/screenshot.js` from the local self-hosted web build. They are
+linked below so the proof is visible directly from the repository README.
 
-| File | Viewport | Stage |
+| Loader | After load | After keys |
 |---|---|---|
-| `00_loader_640.png` | 640×480 | initial loader, 5 s after goto |
-| `01_afterload_640.png` | 640×480 | after the 100 s WAD/wasm boot wait |
-| `02_afterkeys_640.png` | 640×480 | after Enter/Space/Z keypresses |
-| `03_320x240_fullgame.png` | 320×240 (GameShell native) | after viewport shrink |
-| `04_320x240_afterkey.png` | 320×240 | after another keypress |
+| [![loader](00_loader_640.png)](00_loader_640.png) | [![loaded](01_afterload_640.png)](01_afterload_640.png) | [![keys](02_afterkeys_640.png)](02_afterkeys_640.png) |
 
-## How to regenerate
+| GameShell viewport | GameShell after key |
+|---|---|
+| [![320x240](03_320x240_fullgame.png)](03_320x240_fullgame.png) | [![320x240 key](04_320x240_afterkey.png)](04_320x240_afterkey.png) |
+
+## Capture details
+
+- `00_loader_640.png`: 640×480, five seconds after navigation.
+- `01_afterload_640.png`: 640×480, after the 100-second WAD/wasm wait.
+- `02_afterkeys_640.png`: 640×480, after Enter, Space, and Z keypresses.
+- `03_320x240_fullgame.png`: 320×240, matching the GameShell native viewport.
+- `04_320x240_afterkey.png`: 320×240, after another Enter keypress.
+
+Regenerate with:
 
 ```sh
 node port/wasm/tools/screenshot.js port/wasm/proof
 ```
 
-Requires `puppeteer` (already installed in this environment) and the build in
-`port/wasm/build/undertale-yellow/`.
-
-## Honest reading of the captures
-
-The game's WebGL canvas is rendered by the wasm runtime; the headless
-screenshots show the page lifecycle (loader → post-load → keypress response)
-and the correct 320×240 scaling. They prove the build loads and the page is
-interactive; pixel-identical game frames depend on SwiftShader's WebGL
-implementation in headless mode, so treat the in-canvas content as
-representative rather than definitive. On real hardware (the GameShell's
-browser) the in-canvas rendering is produced by the same wasm code path.
+The capture harness reports browser console errors, page errors, failed
+requests, and HTTP errors. The checked-in images demonstrate the loader,
+post-load interaction, and native-size scaling. They do not claim that an
+unofficial web build is an official UTY release or that battle-specific zoom
+has been implemented.
