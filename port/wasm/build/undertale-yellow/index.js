@@ -10,19 +10,19 @@
       var progressElement = document.getElementById("progress");
       var spinnerElement = document.getElementById("spinner");
       var canvasElement = document.getElementById("canvas");
-      var outputElement = document.getElementById("output");
+      var outputElement = document.getElementById("output") || document.createElement("textarea");
       var outputContainerElement = document.getElementById("output-container") || document.createElement("div");
       if (!outputContainerElement.parentNode) document.body.appendChild(outputContainerElement);
       var qrElement = document.getElementById("QRCode") || document.createElement("img");
       var qr2Element = document.getElementById("QR2Code") || document.createElement("img");
       var qrButton = document.getElementById("QRButton") || document.createElement("button");
       var qr2Button = document.getElementById("QR2Button") || document.createElement("button");
-      var pauseMenu = document.getElementById("pauseMenuContainer");
-      var resumeButton = document.getElementById("resumeButton");
-      var quitButton = document.getElementById("quitButton");
+      var pauseMenu = document.getElementById("pauseMenuContainer") || document.createElement("div");
+      var resumeButton = document.getElementById("resumeButton") || document.createElement("button");
+      var quitButton = document.getElementById("quitButton") || document.createElement("button");
 
-      const messageContainerElement = document.getElementById("message-container");
-      const messagesElement = document.getElementById("messages");
+      const messageContainerElement = document.getElementById("message-container") || document.createElement("div");
+      const messagesElement = document.getElementById("messages") || document.createElement("div");
       let rollbackMessages = [];
 	  
 	  // BAD STUFF IN CONSOLE | DO NOT DISPLAY!!!
