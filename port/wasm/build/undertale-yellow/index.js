@@ -64,14 +64,13 @@
 		
       var startingHeight, startingWidth;
       var startingAspect;
-      // Older WebGL implementations can expose an incomplete context. Supply
-      // the optional depthRange operation expected by this runner.
+      // The runner expects a WebGL context. If the browser exposes an
+      // incomplete context, provide the optional no-op operation it calls.
       (function () {
-        const canvas = document.getElementById("canvas");
         const originalGetContext = HTMLCanvasElement.prototype.getContext;
         HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
           const context = originalGetContext.call(this, kind, ...args);
-          if (context && typeof context.depthRange !== "function") context.depthRange = function () {};
+          if (context && (kind === "webgl" || kind === "experimental-webgl" || kind === "webgl2") && typeof context.depthRange !== "function") context.depthRange = function () {};
           return context;
         };
       })();
