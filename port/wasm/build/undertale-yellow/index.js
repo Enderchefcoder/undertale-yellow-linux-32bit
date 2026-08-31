@@ -11,11 +11,12 @@
       var spinnerElement = document.getElementById("spinner");
       var canvasElement = document.getElementById("canvas");
       var outputElement = document.getElementById("output");
-      var outputContainerElement = document.getElementById("output-container");
-      var qrElement = document.getElementById("QRCode");
-      var qr2Element = document.getElementById("QR2Code");
-      var qrButton = document.getElementById("QRButton");
-      var qr2Button = document.getElementById("QR2Button");
+      var outputContainerElement = document.getElementById("output-container") || document.createElement("div");
+      if (!outputContainerElement.parentNode) document.body.appendChild(outputContainerElement);
+      var qrElement = document.getElementById("QRCode") || document.createElement("img");
+      var qr2Element = document.getElementById("QR2Code") || document.createElement("img");
+      var qrButton = document.getElementById("QRButton") || document.createElement("button");
+      var qr2Button = document.getElementById("QR2Button") || document.createElement("button");
       var pauseMenu = document.getElementById("pauseMenuContainer");
       var resumeButton = document.getElementById("resumeButton");
       var quitButton = document.getElementById("quitButton");

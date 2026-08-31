@@ -364,7 +364,7 @@
       // runner.js requests this artifact by its original package name.
       // Keep the override explicit and resolve it relative to this page so the
       // build also works when hosted below a nested Freebuff preview path.
-      window.gameUnxUrl = new URL("./game.unx", document.baseURI).href;
+      window.gameUnxUrl = "./game.unx";
 
       // Mirror the original loader's fetch/XHR interception so runner.js routes
       // its "game.unx" requests to the local blob URL, just without the merge.
