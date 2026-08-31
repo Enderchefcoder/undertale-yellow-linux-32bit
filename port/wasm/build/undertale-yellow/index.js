@@ -167,8 +167,10 @@
         },
       };
       Module.setStatus("Downloading...");
-      window.onerror = function (event) {
-        // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+      window.onerror = function (event, source, line, column, error) {
+        // Keep the visible message useful while retaining the real exception in
+        // the console for headless captures and hardware debugging.
+        console.error("UTY web runtime exception", { event, source, line, column, error });
         Module.setStatus("Exception thrown, see JavaScript console");
         spinnerElement.style.display = "none";
         Module.setStatus = function (text) {

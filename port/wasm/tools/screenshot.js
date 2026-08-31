@@ -63,10 +63,16 @@ const shot = (page, name, maxMs) =>
     const t = m.type();
     if (t === "error") console.log("[console:error]", m.text().slice(0, 300));
   });
-  page.on("pageerror", (e) => console.log("[pageerror]", String(e).slice(0, 300)));
+  page.on("pageerror", (e) => console.log("[pageerror]", e && e.stack ? e.stack.slice(0, 1000) : String(e).slice(0, 1000)));
   page.on("requestfailed", (r) => console.log("[reqfail]", r.url().slice(0, 140)));
   page.on("response", (r) => {
     if (r.status() >= 400) console.log("[http " + r.status() + "]", r.url().slice(0, 160));
+  });
+  page.on("console", async (m) => {
+    if (m.type() === "error") {
+      const values = await Promise.all(m.args().map((arg) => arg.jsonValue().catch(() => "<unserializable>")));
+      console.log("[console:error:details]", JSON.stringify(values).slice(0, 2000));
+    }
   });
 
   // Failsafe: always exit so logs are flushed and the command never hangs.
