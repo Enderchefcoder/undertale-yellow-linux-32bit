@@ -126,9 +126,18 @@ That endgame is achievable but genuinely requires closing the GMS2-on-armv7runne
 
 ## Screenshot proof status
 
-The checked-in PNGs are explicitly marked as **failure captures**. They show the
-current WebGL exception rather than successful gameplay and are retained only as
-regression artifacts. Read the observed stack trace and regeneration procedure
-in [`port/wasm/proof/README.md`](port/wasm/proof/README.md). No successful boot
-or battle screenshot is claimed until a capture exits without page errors,
-failed requests, or HTTP 4xx/5xx responses.
+The checked-in PNGs in `port/wasm/proof/` are **verified boot captures** from a
+headless Chromium run: the wasm build boots to its main loop, renders real game
+frames at both 640×480 and the GameShell's native 320×240, and responds to
+input. The capture harness exits 0 only with zero page errors, console errors,
+failed requests, and HTTP 4xx/5xx, and only when every proof frame decodes to
+real rendered content. See [`port/wasm/proof/README.md`](port/wasm/proof/README.md)
+for the frames, the exact verification conditions, and how to regenerate them.
+
+The **battle soul-box zoom is not yet implemented** — it requires editing the
+GameMaker source in `port/uty-decomp` and rebuilding the game export, so no
+battle screenshot is claimed until that lands.
+
+| Loader | Booted (640×480) | After key (640×480) | GameShell 320×240 | After key (320×240) |
+|---|---|---|---|---|
+| [![loader](port/wasm/proof/00_loader_640.png)](port/wasm/proof/00_loader_640.png) | [![booted](port/wasm/proof/01_afterload_640.png)](port/wasm/proof/01_afterload_640.png) | [![after key](port/wasm/proof/02_afterkeys_640.png)](port/wasm/proof/02_afterkeys_640.png) | [![320x240](port/wasm/proof/03_320x240_fullgame.png)](port/wasm/proof/03_320x240_fullgame.png) | [![after key 320](port/wasm/proof/04_320x240_afterkey.png)](port/wasm/proof/04_320x240_afterkey.png) |

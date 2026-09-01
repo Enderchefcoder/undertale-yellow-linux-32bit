@@ -366,7 +366,40 @@
       // build also works when hosted below a nested Freebuff preview path.
       window.gameUnxUrl = "./game.unx";
       window.gameUrlPrefix = "./";
-      window.gamePageFallback = "./index.html";
+
+      // This GX build expects window.oprt.gameFiles for its async wget of
+      // game.unx. Without it the runner's asset request never resolves and the
+      // boot stalls with a spinning loader. Self-hosting emulates that API and
+      // serves the single game.unx file directly.
+      (function () {
+        const nameOf = (fileId) => "./" + String(fileId).split(":")[0];
+        const mark = (tag, extra) => { try { console.log("[oprt] " + tag + (extra ? " " + extra : "")); } catch (e) {} };
+        window.oprt = {
+          gameFiles: {
+            keys: async () => { mark("keys"); return []; },
+            delete: async () => {},
+            // The runner calls .arrayBuffer() on whatever this returns.
+            fetchAndCache: (fileId) => {
+              mark("fetchAndCache", fileId);
+              const p = fetch(nameOf(fileId), { credentials: "same-origin" });
+              p.then(async (r) => {
+                try { const b = await r.clone().arrayBuffer(); mark("fetchAndCache body", r.status + " " + b.byteLength + " bytes"); } catch (e) { mark("fetchAndCache body err", String(e).slice(0, 80)); }
+              }).catch((e) => mark("fetchAndCache err", String(e).slice(0, 80)));
+              return p;
+            },
+            // The runner calls .catch()/.then() on whatever this returns, so it
+            // must be a Promise (async wraps the Response promise).
+            match: async (fileId) => {
+              mark("match", fileId);
+              try {
+                const r = await fetch(nameOf(fileId), { credentials: "same-origin" });
+                try { const b = await r.clone().arrayBuffer(); mark("match body", r.status + " " + b.byteLength + " bytes"); } catch (e) { mark("match body err", String(e).slice(0, 80)); }
+                return r;
+              } catch (e) { mark("match err", String(e).slice(0, 80)); throw e; }
+            },
+          },
+        };
+      })();
 
       // Mirror the original loader's fetch/XHR interception so runner.js routes
       // its "game.unx" requests to the local blob URL, just without the merge.
@@ -374,14 +407,13 @@
         const originalFetch = window.fetch;
         window.fetch = function (...args) {
           let [url, options] = args;
-          if (typeof url === "string" && (url.includes("game.unx") || url.includes("undefined/pages/"))) url = url.includes("game.unx") ? window.gameUnxUrl : window.gamePageFallback;
+          if (typeof url === "string" && url.includes("game.unx")) url = window.gameUnxUrl;
           else if (url instanceof Request && url.url.includes("game.unx")) url = new Request(window.gameUnxUrl, url);
           return originalFetch.call(this, url, options);
         };
         const originalOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function (method, url, ...rest) {
           if (url.indexOf("game.unx") !== -1) url = window.gameUnxUrl;
-          else if (url.indexOf("undefined/pages/") !== -1) url = window.gamePageFallback;
           return originalOpen.call(this, method, url, ...rest);
         };
       })();
